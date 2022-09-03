@@ -122,7 +122,7 @@ export default function sqlLabReducer(state = {}, action) {
       const queries = {};
       Object.keys(state.queries).forEach(k => {
         const query = state.queries[k];
-        if (qeIds.indexOf(query.sqlEditorId) > -1) {
+        if (qeIds.indexOf(query.id) > -1) {
           queries[k] = query;
         }
       });
@@ -236,7 +236,7 @@ export default function sqlLabReducer(state = {}, action) {
               completed: false,
             },
           },
-          action.query.sqlEditorId,
+          action.query.id,
         ),
       };
     },
@@ -249,8 +249,8 @@ export default function sqlLabReducer(state = {}, action) {
       // only valid for the SQL text they correspond to -- once the SQL has
       // changed, the old validation doesn't tell us anything useful anymore.
       const qe = {
-        ...getFromArr(state.queryEditors, action.query.sqlEditorId),
-        ...(state.unsavedQueryEditor.id === action.query.sqlEditorId &&
+        ...getFromArr(state.queryEditors, action.query.id),
+        ...(state.unsavedQueryEditor.id === action.query.id &&
           state.unsavedQueryEditor),
       };
       if (qe.validationResult.id !== action.query.id) {
@@ -268,7 +268,7 @@ export default function sqlLabReducer(state = {}, action) {
               completed: true,
             },
           },
-          action.query.sqlEditorId,
+          action.query.id,
         ),
       };
     },
@@ -280,13 +280,13 @@ export default function sqlLabReducer(state = {}, action) {
       // We don't care about any but the most recent because validations are
       // only valid for the SQL text they correspond to -- once the SQL has
       // changed, the old validation doesn't tell us anything useful anymore.
-      const qe = getFromArr(state.queryEditors, action.query.sqlEditorId);
+      const qe = getFromArr(state.queryEditors, action.query.id);
       if (qe.validationResult.id !== action.query.id) {
         return state;
       }
       // Otherwise, persist the results on the queryEditor state
       let newState = { ...state };
-      const sqlEditor = { id: action.query.sqlEditorId };
+      const sqlEditor = { id: action.query.id };
       newState = alterInArr(newState, 'queryEditors', sqlEditor, {
         validationResult: {
           id: action.query.id,
@@ -308,7 +308,7 @@ export default function sqlLabReducer(state = {}, action) {
         ...state,
         queryCostEstimates: {
           ...state.queryCostEstimates,
-          [action.query.sqlEditorId]: {
+          [action.query.id]: {
             completed: false,
             cost: null,
             error: null,
@@ -321,7 +321,7 @@ export default function sqlLabReducer(state = {}, action) {
         ...state,
         queryCostEstimates: {
           ...state.queryCostEstimates,
-          [action.query.sqlEditorId]: {
+          [action.query.id]: {
             completed: true,
             cost: action.json,
             error: null,
@@ -334,7 +334,7 @@ export default function sqlLabReducer(state = {}, action) {
         ...state,
         queryCostEstimates: {
           ...state.queryCostEstimates,
-          [action.query.sqlEditorId]: {
+          [action.query.id]: {
             completed: false,
             cost: null,
             error: action.error,
@@ -344,10 +344,10 @@ export default function sqlLabReducer(state = {}, action) {
     },
     [actions.START_QUERY]() {
       let newState = { ...state };
-      if (action.query.sqlEditorId) {
+      if (action.query.id) {
         const qe = {
-          ...getFromArr(state.queryEditors, action.query.sqlEditorId),
-          ...(action.query.sqlEditorId === state.unsavedQueryEditor.id &&
+          ...getFromArr(state.queryEditors, action.query.id),
+          ...(action.query.id === state.unsavedQueryEditor.id &&
             state.unsavedQueryEditor),
         };
         if (qe.latestQueryId && state.queries[qe.latestQueryId]) {
@@ -372,7 +372,7 @@ export default function sqlLabReducer(state = {}, action) {
           {
             latestQueryId: action.query.id,
           },
-          action.query.sqlEditorId,
+          action.query.id,
         ),
       };
     },
@@ -530,7 +530,7 @@ export default function sqlLabReducer(state = {}, action) {
       const query = {
         ...state.queries[action.queryId],
         // point query to migrated query editor
-        sqlEditorId: action.queryEditorId,
+        id: action.queryEditorId,
       };
       const queries = { ...state.queries, [query.id]: query };
       return { ...state, queries };

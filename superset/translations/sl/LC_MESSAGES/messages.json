@@ -3383,7 +3383,7 @@
       "Enable query cost estimation": [
         "Omogoči ocenjevanje potratnosti poizvedbe"
       ],
-      "For Presto and Postgres, shows a button to compute cost before running a query.": [
+      "For Bigquery, Presto and Postgres, shows a button to compute cost before running a query.": [
         "Za Presto in Postgres prikaže gumb za izračun potratnosti pred zagonom poizvedbe."
       ],
       "Allow this database to be explored": [
